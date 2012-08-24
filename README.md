@@ -1,4 +1,16 @@
-Dxyz
-====
+Dxyz - Ê¹ÓÃÏàÍ¬µÄ´úÂë¿ª·¢ DiscuzX 1.5 ~ 2.5 À©Õ¹
 
-ä½¿ç”¨ç›¸åŒçš„ä»£ç å¼€å‘ DiscuzX 1.5~2.5 æ‰©å±•
+Ïà¹ØÎÄ¼þÌáÈ¡×Ô Discuz X2.5/20120701 , ²¢×ö¹ý±ØÒªÐÞ¸Ä.
+
+Ê¹ÓÃ·½·¨:
+1.ÔÚÏà¹ØÈë¿Ú´¦µ÷ÓÃ require_once DISCUZ_ROOT . '/dxyz/init.php';
+
+×¢ÒâÊÂÏî:
+1.±¾¿ò¼Ü²»¶ÔÄ¬ÈÏ´úÂë½øÐÐÐÞ¸Ä£¬±àÐ´Êý¾Ý²ãÎÄ¼þÊ±£¬ÇëÊ¹ÓÃ Dxyz_DB Àà´úÌæ DB Àà¡£
+2.±àÐ´²å¼þ°²×°ÎÄ¼þµ÷ÓÃÓïÑÔ°üÊ±£¬ÇëÖ±½ÓÊ¹ÓÃ $installlang['english'] £¨X1.5 Ä¬ÈÏ¸ñÊ½ÊÇ $installlang['plugin_iden']['english']£©
+3.±¾¿ò¼Ü½ö¶Ô´úÂëÓÐÐ§£¬²»¶Ô·ç¸ñÎÄ¼þ½øÐÐÖØÐ´¡£¿ª·¢Ê±ÇëÄú×ÔÐÐ¿¼ÂÇ°æ±¾¼ä·ç¸ñ²îÒì¡£
+4.±¾¿ò¼ÜÒÑ°üº¬ X2.5 ÖÐËù¸½´øµÄÏµÍ³Êý¾Ý²ãÎÄ¼þ£¬µ«Ïà¹ØÊý¾Ý±í¼°×Ö¶Î¿ÉÄÜ²¢²»°üº¬ÔÚÔçÆÚ°æ±¾ÖÐ¡£Ê¹ÓÃÏà¹ØÄÚÈÝ¿ª·¢Ê±Çë×ÔÐÐ²âÊÔ¡£
+
+Version - 0.1 Beta:
+1.ÊµÏÖ X1.5/X2 ¶ÔÊý¾Ý²ãµÄÖ§³Ö
+2.¸ü¸Ä X1.5 ²å¼þ°²×°ÎÄ¼þ
