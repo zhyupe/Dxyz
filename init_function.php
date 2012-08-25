@@ -27,10 +27,16 @@ switch ($dzVersion[0]) {
             }
             return $ret;
         }
-
+        
+        function dxyz_input() {
+            $_GET = dstripslashes($_GET);
+            $_POST = dstripslashes($_POST);
+            $_COOKIE = dstripslashes($_COOKIE);
+        }
         break;
     case 'X2.5':
     default:
+        function dxyz_input() { }
         break;
 }
 
