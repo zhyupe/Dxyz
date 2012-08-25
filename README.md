@@ -5,12 +5,12 @@
 相关文件提取自 Discuz X2.5/20120701 , 并做过必要修改.
 
 ##使用方法
- * 如果文件是通过 DiscuzX 自带入口（如 *plugin.php | admin.php*）调用，请参照以下代码调用:
+ * 如果文件是通过 DiscuzX 自带入口（如 *plugin.php | admin.php*）调用，请参照以下代码调用:  
     <?php
     require_once DISCUZ_ROOT . '/dxyz/init.php';
     
     //Type your code here.
- * 如果文件是独立入口，请参照以下代码调用:
+ * 如果文件是独立入口，请参照以下代码调用:  
     <?php
     require './source/class/class_core.php';
     require './source/function/function_forum.php';
