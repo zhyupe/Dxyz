@@ -4,6 +4,10 @@
  * Dxyz V0.1 Beta
  */
 
+if(!defined('IN_DXYZ')) {
+	exit('Access Denied');
+}
+
 switch ($dzVersion[0]) {
     case 'X1':
     case 'X1.5':

@@ -25,8 +25,8 @@
 
     //Type your code here.
     ```
- * 如果您需要取消 X1.5/X2 对 *$_GET | $_POST | $_COOKIE* 的反斜线处理，请在***调用 /dxyz/init.php 后***加入`dxyz_input();`  
-   如果是独立入口文件，请务必在`$discuz->init();`之后使用该函数
+ * 如果您需要取消 X1.5/X2 对 *$_GET | $_POST | $_COOKIE* 的反斜线处理，请在***调用 /dxyz/init.php 后***加入 `dxyz_input();`  
+   如果是独立入口文件，请务必在 `$discuz->init();` 之后使用该函数  
    请不要在为 X2.5 以下版本编写的扩展中使用本函数，因为这些扩展是按照 *$_GET | $_POST | $_COOKIE* 已经经过反斜线处理的情况编写的，在这些扩展中调用本函数可能会留下 SQL 攻击漏洞。
 
 ##注意事项
