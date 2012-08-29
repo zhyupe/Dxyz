@@ -1,5 +1,6 @@
 #Dxyz
 在旧版本 DiscuzX 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。
+支持版本: DiscuzX 1.5 | DiscuzX 2 | DiscuzX 2.5
 
 ##已实现的特性
 ###Discuz X2.5 +
@@ -9,6 +10,7 @@
  * （具体使用方法请参照 [Discuz! 技术文库](http://dev.discuz.org/wiki/index.php?title=X2.5%E7%9A%84%E6%96%B0%E7%A8%8B%E5%BA%8F%E6%9E%B6%E6%9E%84#.E6.95.B0.E6.8D.AE.E5.BA.93DB.E5.B1.82)）
  * 取消对传入参数的反斜线处理（需自行调用`dxyz_input();`）
  * 对 C 类的部分支持（`C::app | C::t`）
+
 ###Discuz X2 +
  * 编写插件安装文件调用语言包时，直接使用 $installlang['english'] （X1.5 格式是 $installlang['plugin_iden']['english']）
 
