@@ -1,6 +1,6 @@
 #Dxyz
-在旧版本 DiscuzX 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。  
-支持版本: DiscuzX 1.5 | DiscuzX 2 | DiscuzX 2.5
+在旧版本 Discuz X 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。  
+支持版本: Discuz X1.5 | Discuz X2 | Discuz X2.5
 
 ##已实现的特性
 ###Discuz X2.5 +
