@@ -1,8 +1,19 @@
 #Dxyz
-使用相同的代码开发 DiscuzX 1.5 ~ 2.5 扩展
+在旧版本 DiscuzX 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。
+
+##已实现的特性
+###Discuz X2.5 +
+ * 对 DB 类新增方法的支持
+ * 对 SQL 语句 format 的支持
+ * 对数据层的支持
+ * （具体使用方法请参照 [Discuz! 技术文库](http://dev.discuz.org/wiki/index.php?title=X2.5%E7%9A%84%E6%96%B0%E7%A8%8B%E5%BA%8F%E6%9E%B6%E6%9E%84#.E6.95.B0.E6.8D.AE.E5.BA.93DB.E5.B1.82)）
+ * 取消对传入参数的反斜线处理（需自行调用`dxyz_input();`）
+ * 对 C 类的部分支持（`C::app | C::t`）
+###Discuz X2 +
+ * 编写插件安装文件调用语言包时，直接使用 $installlang['english'] （X1.5 格式是 $installlang['plugin_iden']['english']）
 
 ##文件来源
-相关文件提取自 Discuz X2.5/20120701 , 并做过必要修改.
+相关文件及内容提取自 Discuz X2.5/20120701 , 并做过必要修改.
 
 ##使用方法
  * 如果文件是通过 DiscuzX 自带入口（如 *plugin.php | admin.php*）调用，请参照以下代码调用:
@@ -31,7 +42,7 @@
 
 ##注意事项
  * 编写数据层文件时，请使用 Dxyz_DB 类代替 DB 类。
- * 编写插件安装文件调用语言包时，请直接使用 $installlang['english'] （X1.5 默认格式是 $installlang['plugin_iden']['english']）
+ * 编写插件安装文件调用语言包时，请直接使用 $installlang['english'] （X1.5 格式是 $installlang['plugin_iden']['english']）
  * 本框架仅对代码有效，不对风格文件进行重写。开发时请您自行考虑版本间风格差异。
  * 本框架已包含 X2.5 中所附带的系统数据层文件，但相关数据表及字段可能并不包含在早期版本中。使用相关内容开发时请自行测试。
 
