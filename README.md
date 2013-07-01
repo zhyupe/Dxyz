@@ -1,31 +1,45 @@
 #Dxyz
-使用相同的代码开发 DiscuzX 1.5 ~ 3 扩展
+在旧版本 Discuz X 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。  
+支持版本: Discuz X1.5 | Discuz X2 | Discuz X2.5
+
+##已实现的特性
+###Discuz X2.5 +
+ * 对 DB 类新增方法的支持
+ * 对 SQL 语句 format 的支持
+ * 对数据层的支持
+ * （具体使用方法请参照 [Discuz! 技术文库](http://dev.discuz.org/wiki/index.php?title=X2.5%E7%9A%84%E6%96%B0%E7%A8%8B%E5%BA%8F%E6%9E%B6%E6%9E%84#.E6.95.B0.E6.8D.AE.E5.BA.93DB.E5.B1.82)）
+ * 取消对传入参数的反斜线处理（需自行调用`dxyz_input();`）
+ * 对 C 类的部分支持（`C::app | C::t`）
+
+###Discuz X2 +
+ * 编写插件安装文件调用语言包时，直接使用 $installlang['english'] （X1.5 格式是 $installlang['plugin_iden']['english']）
 
 ##文件来源
 相关文件提取自 Discuz X3/20130620, 并做过必要修改.
 
 ##使用方法
  * 如果文件是通过 DiscuzX 自带入口（如 *plugin.php | admin.php*）调用，请参照以下代码调用:
+    ```php
+    <?php
+    require_once DISCUZ_ROOT . '/dxyz/init.php';
 
-        <?php
-        require_once DISCUZ_ROOT . '/dxyz/init.php';
-
-        //Type your code here.
-
+    //Type your code here.
+    ```
  * 如果文件是独立入口，请参照以下代码调用:
+    ```php
+    <?php
+    require './source/class/class_core.php';
+    require './source/function/function_forum.php';
 
-        <?php
-        require './source/class/class_core.php';
-        require './source/function/function_forum.php';
+    require './dxyz/init.php';
 
-        require './dxyz/init.php';
+    $discuz = C::app();
+    $discuz->init();
 
-        $discuz = C::app();
-        $discuz->init();
-
-        //Type your code here.
-
- * 如果您需要取消 X1.5/X2 对 *$_GET | $_POST | $_COOKIE* 的反斜线处理，请在***您自己的代码前***加入`dxyz_input();`  
+    //Type your code here.
+    ```
+ * 如果您需要取消 X1.5/X2 对 *$_GET | $_POST | $_COOKIE* 的反斜线处理，请在***调用 /dxyz/init.php 后***加入 `dxyz_input();`  
+   如果是独立入口文件，请务必在 `$discuz->init();` 之后使用该函数  
    请不要在为 X2.5 以下版本编写的扩展中使用本函数，因为这些扩展是按照 *$_GET | $_POST | $_COOKIE* 已经经过反斜线处理的情况编写的，在这些扩展中调用本函数可能会留下 SQL 攻击漏洞。
 
 ##注意事项
