@@ -1,6 +1,6 @@
 #Dxyz
 在旧版本 Discuz X 中实现部分新版本特性，使为最新版本开发的应用兼容旧版本平台。  
-支持版本: Discuz X1.5 | Discuz X2 | Discuz X2.5
+支持版本: Discuz X1.5 | Discuz X2 | Discuz X2.5 | Discuz X3 (待测试)
 
 ##已实现的特性
 ###Discuz X2.5 +
@@ -52,6 +52,7 @@
 ##版本记录
 ###Version - 0.2 Beta:
  * 将部分文件更换为 X3 内置文件
+ 
 ###Version - 0.1 Beta:
  * 实现 X1.5/X2 对数据层的支持
  * 更改 X1.5 插件安装过程中语言包获取格式
