@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_member_crime.php 28893 2012-03-19 02:14:36Z svn_project_zhangjie $
+ *      $Id: table_common_member_crime.php 33347 2013-05-30 08:24:40Z jeffjzhang $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -35,6 +35,18 @@ class table_common_member_crime extends discuz_table
 
 	public function fetch_all_by_where($where, $start = 0, $limit = 0) {
 		return Dxyz_DB::fetch_all('SELECT * FROM %t %i ORDER BY dateline DESC '.Dxyz_DB::limit($start, $limit), array($this->_table, $where));
+	}
+
+	public function fetch_all_by_uid_action($uid, $action) {
+		return Dxyz_DB::fetch_all('SELECT * FROM %t WHERE '.Dxyz_DB::field('uid', $uid).' AND '.Dxyz_DB::field('action', $action).' ORDER BY dateline', array($this->_table));
+	}
+
+	public function fetch_all_by_cid($cid, $action, $limit) {
+		if(!$cid) {
+			return Dxyz_DB::fetch_all('SELECT * FROM %t '.($action ? 'WHERE '.Dxyz_DB::field('action', $action) : '').' ORDER BY cid DESC '.Dxyz_DB::limit($limit), array($this->_table), $this->_pk);
+		} else {
+			return Dxyz_DB::fetch_all('SELECT * FROM %t WHERE '.Dxyz_DB::field('cid', $cid, '<').($action ? ' AND '.Dxyz_DB::field('action', $action) : '').' ORDER BY cid DESC '.Dxyz_DB::limit($limit), array($this->_table), $this->_pk);
+		}
 	}
 }
 

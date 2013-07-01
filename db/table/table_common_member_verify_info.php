@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_member_verify_info.php 29916 2012-05-03 02:17:25Z liulanbo $
+ *      $Id: table_common_member_verify_info.php 31799 2012-10-11 02:36:34Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -39,7 +39,7 @@ class table_common_member_verify_info extends discuz_table
 				$verifytype = dintval($verifytype, is_array($verifytype) ? true : false);
 				$addsql = ' AND '.Dxyz_DB::field('verifytype', $verifytype);
 			}
-			return Dxyz_DB::fetch_first('DELETE FROM %t WHERE uid=%d'.$addsql, array($this->_table, $uid));
+			return Dxyz_DB::fetch_first('DELETE FROM %t WHERE '.(is_array($uid) ? 'uid IN(%n)' : 'uid=%d').$addsql, array($this->_table, $uid));
 		}
 		return false;
 	}

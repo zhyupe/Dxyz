@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_cron.php 27449 2012-02-01 05:32:35Z zhangguosheng $
+ *      $Id: table_common_cron.php 30314 2012-05-22 03:12:44Z monkey $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -23,11 +23,15 @@ class table_common_cron extends discuz_table
 
 	public function fetch_nextrun($timestamp) {
 		$timestamp = intval($timestamp);
-		return Dxyz_DB::fetch_first('SELECT * FROM '.Dxyz_DB::table($this->_table)."	WHERE available>'0' AND nextrun<='$timestamp' ORDER BY nextrun LIMIT 1");
+		return Dxyz_DB::fetch_first('SELECT * FROM '.Dxyz_DB::table($this->_table)." WHERE available>'0' AND nextrun<='$timestamp' ORDER BY nextrun LIMIT 1");
 	}
 
 	public function fetch_nextcron() {
-		return Dxyz_DB::fetch_first('SELECT * FROM '.Dxyz_DB::table($this->_table)."	WHERE available>'0' ORDER BY nextrun LIMIT 1");
+		return Dxyz_DB::fetch_first('SELECT * FROM '.Dxyz_DB::table($this->_table)." WHERE available>'0' ORDER BY nextrun LIMIT 1");
+	}
+
+	public function get_cronid_by_filename($filename) {
+		return Dxyz_DB::result_first('SELECT cronid FROM '.Dxyz_DB::table($this->_table)." WHERE filename='$filename'");
 	}
 
 

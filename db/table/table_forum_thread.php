@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_thread.php 29242 2012-03-30 08:02:01Z chenmengshu $
+ *      $Id: table_forum_thread.php 33147 2013-04-27 09:58:40Z theoliu $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -72,9 +72,9 @@ class table_forum_thread extends discuz_table
 	}
 	public function fetch_thread_table_ids() {
 		$threadtableids = array('0' => 0);
-		$db = Dxyz_DB::object();
-		$query = $db->query("SHOW TABLES LIKE '".str_replace('_', '\_', Dxyz_DB::table('forum_thread').'_%')."'");
-		while($table = $db->fetch_array($query, MYSQL_NUM)) {
+		$Dxyz_DB = Dxyz_DB::object();
+		$query = $Dxyz_DB->query("SHOW TABLES LIKE '".str_replace('_', '\_', Dxyz_DB::table('forum_thread').'_%')."'");
+		while($table = $Dxyz_DB->fetch_array($query, MYSQL_NUM)) {
 			$tablename = $table[0];
 			$tableid = intval(substr($tablename, strrpos($tablename, '_') + 1));
 			if(empty($tableid)) {
@@ -189,7 +189,7 @@ class table_forum_thread extends discuz_table
 	public function fetch_all_by_tid_displayorder($tids, $displayorder = null, $glue = '>=', $fids = array(), $closed = null) {
 		$data = array();
 		if(!empty($tids)) {
-			$data = $this->fetch_all_by_tid($tids);
+			$data = $this->fetch_all_by_tid((array)$tids);
 			$fids = $fids && !is_array($fids) ? array($fids) : $fids;
 			foreach($data as $tid => $value) {
 				if($displayorder !== null && !(helper_util::compute($value['displayorder'], $displayorder, $glue))) {
@@ -247,7 +247,7 @@ class table_forum_thread extends discuz_table
 
 	public function fetch_all_by_displayorder($displayorder = 0, $glue = '>=', $start = 0, $limit = 0, $tableid = 0) {
 		$glue = helper_util::check_glue($glue);
-		$displayorder = dintval($displayorder);
+		$displayorder = dintval($displayorder, true);
 		return Dxyz_DB::fetch_all('SELECT * FROM %t WHERE %i '.Dxyz_DB::limit($start, $limit), array($this->get_table_name($tableid), Dxyz_DB::field('displayorder', $displayorder, $glue)));
 	}
 
@@ -272,8 +272,10 @@ class table_forum_thread extends discuz_table
 		$parameter = array($this->get_table_name());
 		$wherearr = array();
 		$fids = dintval($fids, true);
-		$parameter[] = $fids;
-		$wherearr[] = is_array($fids) && $fids ? 'fid IN(%n)' : 'fid=%d';
+		if(!empty($fids)) {
+			$parameter[] = $fids;
+			$wherearr[] = is_array($fids) && $fids ? 'fid IN(%n)' : 'fid=%d';
+		}
 		if($displayorder !== null) {
 			$parameter[] = $displayorder;
 			$dglue = helper_util::check_glue($dglue);
@@ -494,7 +496,7 @@ class table_forum_thread extends discuz_table
 				}
 			}
 		}
-		if($defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/ies", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
+		if(!defined('IN_MOBILE') && $defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/ies", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
 			foreach($conditions['displayorder'] as $id) {
 				if($id < 2) {
 					$firstpage = true;
@@ -941,7 +943,7 @@ class table_forum_thread extends discuz_table
 		$tids = dintval($tids, true);
 		if($tids) {
 			$wheresql = is_array($tids) && $tids ? 'tid IN(%n)' : 'tid=%d';
-			Dxyz_DB::query("INSERT INTO %t SELECT * FROM %t WHERE $wheresql", array($this->get_table_name($origin), $this->get_table_name($target), $tids));
+			Dxyz_DB::query("INSERT INTO %t SELECT * FROM %t WHERE $wheresql", array($this->get_table_name($target), $this->get_table_name($origin), $tids));
 		}
 	}
 
@@ -1049,9 +1051,13 @@ class table_forum_thread extends discuz_table
 		$tids = dintval($tids, true);
 		if($tids) {
 			$this->clear_cache($tids);
+			C::t('forum_newthread')->delete_by_tids($tids);
 			return Dxyz_DB::delete($this->get_table_name($tableid), Dxyz_DB::field('tid', $tids), $limit, $unbuffered);
 		}
 		return !$unbuffered ? 0 : false;
+	}
+	public function delete($tids, $unbuffered = false, $tableid = 0, $limit = 0) {
+		return $this->delete_by_tid($tids, $unbuffered, $tableid, $limit);
 	}
 	public function delete_by_fid($fid, $unbuffered = false, $tableid = 0, $limit = 0) {
 		$fid = dintval($fid, true);
@@ -1059,6 +1065,7 @@ class table_forum_thread extends discuz_table
 			foreach((array)$fid as $delfid) {
 				$this->clear_cache($delfid, 'forumdisplay_');
 			}
+			C::t('forum_newthread')->delete_by_tids($fid);
 			return Dxyz_DB::delete($this->get_table_name($tableid), Dxyz_DB::field('fid', $fid), $limit, $unbuffered);
 		}
 		return 0;
@@ -1067,10 +1074,10 @@ class table_forum_thread extends discuz_table
 		$tableid = intval($tableid);
 		return $tableid ? "forum_thread_$tableid" : 'forum_thread';
 	}
-	public function fetch_all_for_guide($type, $limittid, $tids = array(), $heatslimit = 3, $dateline = 0) {
+	public function fetch_all_for_guide($type, $limittid, $tids = array(), $heatslimit = 3, $dateline = 0, $start = 0, $limit = 600, $fids = 0) {
 		switch ($type) {
 			case 'hot' :
-				$addsql = ' AND heats>'.intval($heatslimit);
+				$addsql = ' AND heats>='.intval($heatslimit);
 				break;
 			case 'digest' :
 				$addsql = ' AND digest>0';
@@ -1086,11 +1093,25 @@ class table_forum_thread extends discuz_table
 			$tids = dintval($tids, true);
 			$tidsql = Dxyz_DB::field('tid', $tids);
 		} else {
-			$tidsql = 'tid>'.intval($limittid);
+			$limittid = intval($limittid);
+			$tidsql = 'tid>'.$limittid;
+			$fids = dintval($fids, true);
+			if($fids) {
+				$tidsql .= is_array($fids) && $fids ? ' AND fid IN('.dimplode($fids).')' : ' AND fid='.$fids;
+			}
 			if($dateline) {
 				$addsql .= ' AND dateline > '.intval($dateline);
 			}
-			$addsql .= ' AND displayorder>=0 ORDER BY lastpost DESC LIMIT 600';
+			if($type == 'newthread') {
+				$orderby = 'tid';
+			} elseif($type == 'reply') {
+				$orderby = 'lastpost';
+				$addsql .= ' AND replies > 0';
+			} else {
+				$orderby = 'lastpost';
+			}
+			$addsql .= ' AND displayorder>=0 ORDER BY '.$orderby.' DESC '.Dxyz_DB::limit($start, $limit);
+
 		}
 		return Dxyz_DB::fetch_all("SELECT * FROM ".Dxyz_DB::table('forum_thread')." WHERE ".$tidsql.$addsql);
 	}
@@ -1179,9 +1200,9 @@ class table_forum_thread extends discuz_table
 	public function create_table($maxtableid) {
 		if($maxtableid) {
 			Dxyz_DB::query('SET SQL_QUOTE_SHOW_CREATE=0', 'SILENT');
-			$db = &Dxyz_DB::object();
+			$Dxyz_DB = &Dxyz_DB::object();
 			$query = Dxyz_DB::query("SHOW CREATE TABLE %t", array($this->get_table_name()));
-			$create = $db->fetch_row($query);
+			$create = $Dxyz_DB->fetch_row($query);
 			$createsql = $create[1];
 			$createsql = str_replace(Dxyz_DB::table($this->get_table_name()), Dxyz_DB::table($this->get_table_name($maxtableid)), $createsql);
 			Dxyz_DB::query($createsql);

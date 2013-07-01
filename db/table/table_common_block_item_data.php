@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_block_item_data.php 29446 2012-04-12 07:46:32Z zhangguosheng $
+ *      $Id: table_common_block_item_data.php 31958 2012-10-26 05:11:05Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -23,9 +23,9 @@ class table_common_block_item_data extends discuz_table
 
 	public function fetch_all_by_bid($bid, $isverified = 1, $start = 0, $limit = 0, $bannedids = array(), $format = true) {
 		$data = array();
-		if(($bid = dintval($bid))) {
+		if(($bid = dintval($bid, true))) {
 			$addsql = $bannedids = dintval($bannedids, true) ? ' AND id NOT IN ('.dimplode($bannedids).')' : '';
-			$query = Dxyz_DB::query('SELECT * FROM %t WHERE '.Dxyz_DB::field('bid', $bid).' AND isverified=%d'.$addsql.' ORDER BY stickgrade DESC, verifiedtime DESC, dataid DESC '.Dxyz_DB::limit($start, $limit), array($this->_table, $isverified));
+			$query = Dxyz_DB::query('SELECT * FROM %t WHERE '.Dxyz_DB::field('bid', $bid).' AND isverified=%d'.$addsql.' ORDER BY stickgrade DESC, displayorder DESC, verifiedtime DESC, dataid DESC '.Dxyz_DB::limit($start, $limit), array($this->_table, $isverified));
 			while($value = Dxyz_DB::fetch($query)) {
 				if($format) {
 					$value['fields'] = unserialize($value['fields']);
@@ -51,7 +51,7 @@ class table_common_block_item_data extends discuz_table
 	}
 
 	public function delete_by_bid($bid) {
-		if(($bid = dintval($bid))) {
+		if(($bid = dintval($bid, true))) {
 			Dxyz_DB::delete($this->_table, Dxyz_DB::field('bid', $bid));
 		}
 	}

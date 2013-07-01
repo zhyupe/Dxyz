@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_moderate.php 28051 2012-02-21 10:36:56Z zhangguosheng $
+ *      $Id: table_common_moderate.php 31513 2012-09-04 08:47:57Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -184,7 +184,7 @@ class table_common_moderate extends discuz_table
 				array($this->_get_table($idtype), $innertable, $idtype, $status));
 	}
 
-	public function count_by_search_for_post($posttable, $status = null, $first = null, $fids = null, $author = null, $dateline = null, $subject = null, $isgroup = null) {
+	public function count_by_search_for_post($posttable, $status = null, $first = null, $fids = null, $author = null, $dateline = null, $subject = null) {
 		$wheresql = array();
 		if($status !== null) {
 			$wheresql[] = 'm.'.Dxyz_DB::field('status', $status);
@@ -195,9 +195,6 @@ class table_common_moderate extends discuz_table
 		if($fids) {
 			$wheresql[] = 'p.'.Dxyz_DB::field('fid', $fids);
 		}
-		if($isgroup) {
-			$wheresql[] = 't.isgroup=1';
-		}
 		if($author) {
 			$wheresql[] = 'p.'.Dxyz_DB::field('author', $author);
 		}
@@ -205,14 +202,14 @@ class table_common_moderate extends discuz_table
 			$wheresql[] = 'p.'.Dxyz_DB::field('dateline', $dateline, '>');
 		}
 		if($subject) {
-			$wheresql[] = 't.'.Dxyz_DB::field('subject', '%'.$subject.'%', 'like');
+			$wheresql[] = 'p.'.Dxyz_DB::field('message', '%'.$subject.'%', 'like');
 		}
 
-		return Dxyz_DB::result_first('SELECT COUNT(*) FROM %t m LEFT JOIN %t p ON p.pid=m.id LEFT JOIN %t t ON t.tid=p.tid WHERE %i',
-				array($this->_get_table('pid'), $posttable, 'forum_thread', implode(' AND ', $wheresql)));
+		return Dxyz_DB::result_first('SELECT COUNT(*) FROM %t m LEFT JOIN %t p ON p.pid=m.id WHERE %i',
+				array($this->_get_table('pid'), $posttable, implode(' AND ', $wheresql)));
 	}
 
-	public function fetch_all_by_search_for_post($posttable, $status = null, $first = null, $fids = null, $author = null, $dateline = null, $subject = null, $isgroup = null, $start = 0, $limit = 0) {
+	public function fetch_all_by_search_for_post($posttable, $status = null, $first = null, $fids = null, $author = null, $dateline = null, $subject = null, $start = 0, $limit = 0) {
 		$wheresql = array();
 		if($status !== null) {
 			$wheresql[] = 'm.'.Dxyz_DB::field('status', $status);
@@ -223,9 +220,6 @@ class table_common_moderate extends discuz_table
 		if($fids) {
 			$wheresql[] = 'p.'.Dxyz_DB::field('fid', $fids);
 		}
-		if($isgroup) {
-			$wheresql[] = 't.isgroup=1';
-		}
 		if($author) {
 			$wheresql[] = 'p.'.Dxyz_DB::field('author', $author);
 		}
@@ -233,17 +227,15 @@ class table_common_moderate extends discuz_table
 			$wheresql[] = 'p.'.Dxyz_DB::field('dateline', $dateline, '>');
 		}
 		if($subject) {
-			$wheresql[] = 't.'.Dxyz_DB::field('subject', '%'.$subject.'%', 'like');
+			$wheresql[] = 'p.'.Dxyz_DB::field('message', '%'.$subject.'%', 'like');
 		}
-		return Dxyz_DB::fetch_all('SELECT f.name AS forumname, f.allowsmilies, f.allowhtml, f.allowbbcode, f.allowimgcode, p.pid, p.fid, p.tid,
-			p.author, p.authorid, p.subject, p.dateline, p.message, p.useip, p.attachment, p.htmlon, p.smileyoff, p.bbcodeoff, t.subject AS tsubject, p.status
+		return Dxyz_DB::fetch_all('SELECT p.pid, p.fid, p.tid,
+			p.author, p.authorid, p.subject, p.dateline, p.message, p.useip, p.attachment, p.htmlon, p.smileyoff, p.bbcodeoff, p.status
 			FROM %t m
 			LEFT JOIN %t p on p.pid=m.id
-			LEFT JOIN %t t ON t.tid=p.tid
-			LEFT JOIN %t f ON f.fid=p.fid
 			WHERE %i
 			ORDER BY m.dateline DESC '.Dxyz_DB::limit($start, $limit),
-			array($this->_get_table('pid'), $posttable, 'forum_thread', 'forum_forum', implode(' AND ', $wheresql)));
+			array($this->_get_table('pid'), $posttable, implode(' AND ', $wheresql)));
 	}
 
 	public function count_by_seach_for_thread($status = null, $fids = null) {

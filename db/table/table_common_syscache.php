@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_syscache.php 27449 2012-02-01 05:32:35Z zhangguosheng $
+ *      $Id: table_common_syscache.php 31119 2012-07-18 04:21:20Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -49,6 +49,8 @@ class table_common_syscache extends discuz_table
 			foreach($cachenames as $cachename) {
 				if(!@include_once(DISCUZ_ROOT.'./data/cache/cache_'.$cachename.'.php')) {
 					$lostcaches[] = $cachename;
+				} elseif($this->_allowmem) {
+					memory('set', $cachename, $data[$cachename]);
 				}
 			}
 			if(!$lostcaches) {

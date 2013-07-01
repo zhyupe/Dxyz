@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_tag.php 29434 2012-04-12 04:14:25Z svn_project_zhangjie $
+ *      $Id: table_common_tag.php 32232 2012-12-03 08:57:08Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -21,7 +21,7 @@ class table_common_tag extends discuz_table
 		parent::__construct();
 	}
 
-	public function fetch_all_by_status($status = NUll, $tagname = '', $startlimit = 0, $count = 0, $returncount = 0) {
+	public function fetch_all_by_status($status = NUll, $tagname = '', $startlimit = 0, $count = 0, $returncount = 0, $order = '') {
 		if($status === NULL) {
 			$statussql = 'status<>3';
 		} else {
@@ -35,7 +35,7 @@ class table_common_tag extends discuz_table
 		if($returncount) {
 			return Dxyz_DB::result_first("SELECT count(*) FROM %t WHERE $statussql $namesql", $data);
 		}
-		return Dxyz_DB::fetch_all("SELECT * FROM %t WHERE $statussql $namesql ORDER BY tagid ASC ".Dxyz_DB::limit($startlimit, $count), $data);
+		return Dxyz_DB::fetch_all("SELECT * FROM %t WHERE $statussql $namesql ORDER BY ".Dxyz_DB::order('tagid', $order)." ".Dxyz_DB::limit($startlimit, $count), $data);
 	}
 
 	public function insert($tagname, $status = 0) {

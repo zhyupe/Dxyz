@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_invite.php 29213 2012-03-29 06:46:36Z liulanbo $
+ *      $Id: table_common_invite.php 31197 2012-07-25 06:05:16Z chenmengshu $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -45,7 +45,7 @@ class table_common_invite extends discuz_table
 	public function fetch_all_by_search($uid = 0, $fuid = 0, $fusername = '', $buydatestart = 0, $buydateend = 0, $inviteip = '', $code = '', $start = 0, $limit = 0) {
 		$condition = $this->make_query_condition($uid, $fuid, $fusername, $buydatestart, $buydateend, $inviteip, $code);
 		$data = array();
-		$query = Dxyz_DB::query("SELECT * FROM %t $condition[0] ".Dxyz_DB::limit($start, $limit), $condition[1]);
+		$query = Dxyz_DB::query("SELECT * FROM %t $condition[0] ORDER BY id DESC ".Dxyz_DB::limit($start, $limit), $condition[1]);
 		while($value = Dxyz_DB::fetch($query)) {
 			$this->_uids[$value['uid']] = $value['uid'];
 			$data[] = $value;

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_home_pic.php 30713 2012-06-13 09:44:05Z zhengqingpeng $
+ *      $Id: table_home_pic.php 31180 2012-07-24 03:51:03Z chenmengshu $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -87,7 +87,7 @@ class table_home_pic extends discuz_table
 		return Dxyz_DB::fetch_first("SELECT filepath, thumb FROM %t WHERE albumid=%d AND uid=%d ORDER BY thumb DESC, dateline DESC LIMIT 0,1", array($this->_table, $albumid, $uid));
 	}
 	public function check_albumpic($albumid, $status = NULL, $uid = 0) {
-		$sql = $albumid ? Dxyz_DB::field('albumid', $albumid) : '';
+		$sql = is_numeric($albumid) ? Dxyz_DB::field('albumid', $albumid) : '';
 		$sql .= $uid ? ($sql ? ' AND ' : '').Dxyz_DB::field('uid', $uid) : '';
 		$sql .= $status === NULL ? '' : ($sql ? ' AND ' : '').Dxyz_DB::field('status', $status);
 		return Dxyz_DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", array($this->_table));

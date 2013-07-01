@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Dxyz V0.1 Beta
+ * Dxyz V0.2 Beta
  */
 
 switch ($dzVersion[0]) {
@@ -62,6 +62,7 @@ switch ($dzVersion[0]) {
 
         break;
     case 'X2.5':
+    case 'X3':
     default:
         break;
 }

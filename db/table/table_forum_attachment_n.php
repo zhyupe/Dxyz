@@ -41,7 +41,7 @@ class table_forum_attachment_n extends discuz_table
 		} elseif($tableid == 127) {
 			return 'forum_attachment_unused';
 		} else {
-			throw new DbException('Table forum_attachment_'.$this->_table.' has not exists');
+			throw new Dxyz_DBException('Table forum_attachment_'.$this->_table.' has not exists');
 		}
 	}
 

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_post.php 30707 2012-06-13 03:40:15Z liulanbo $
+ *      $Id: table_forum_post.php 30080 2012-05-09 08:19:20Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -850,11 +850,11 @@ class table_forum_post extends discuz_table
 	}
 	public function show_table_columns($table) {
 		$data = array();
-		$db = &Dxyz_DB::object();
-		if($db->version() > '4.1') {
-			$query = $db->query("SHOW FULL COLUMNS FROM ".Dxyz_DB::table($table), 'SILENT');
+		$Dxyz_DB = &Dxyz_DB::object();
+		if($Dxyz_DB->version() > '4.1') {
+			$query = $Dxyz_DB->query("SHOW FULL COLUMNS FROM ".Dxyz_DB::table($table), 'SILENT');
 		} else {
-			$query = $db->query("SHOW COLUMNS FROM ".Dxyz_DB::table($table), 'SILENT');
+			$query = $Dxyz_DB->query("SHOW COLUMNS FROM ".Dxyz_DB::table($table), 'SILENT');
 		}
 		while($field = @Dxyz_DB::fetch($query)) {
 			$data[$field['Field']] = $field;

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_home_comment.php 30374 2012-05-24 09:24:58Z chenmengshu $
+ *      $Id: table_home_comment.php 31996 2012-10-30 06:15:14Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -74,7 +74,7 @@ class table_home_comment extends discuz_table
 			return null;
 		}
 
-		Dxyz_DB::update($this->_table, $data, implode(' AND ', $condition));
+		return Dxyz_DB::update($this->_table, $data, implode(' AND ', $condition));
 	}
 
 	public function count_by_id_idtype($id, $idtype, $cid = '') {

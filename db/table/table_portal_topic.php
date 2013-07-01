@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_portal_topic.php 27876 2012-02-16 04:28:02Z zhengqingpeng $
+ *      $Id: table_portal_topic.php 32654 2013-02-28 03:55:27Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -45,7 +45,7 @@ class table_portal_topic extends discuz_table
 			}
 		}
 		if(!empty($sql)){
-			Dxyz_DB::query('UPDATE '.Dxyz_DB::table($this->_table).' SET '.implode(',', $sql).' WHERE uid IN ('.dimplode($ids).')', 'UNBUFFERED');
+			Dxyz_DB::query('UPDATE '.Dxyz_DB::table($this->_table).' SET '.implode(',', $sql).' WHERE topicid IN ('.dimplode($ids).')', 'UNBUFFERED');
 		}
 	}
 	public function fetch_all_by_title($idtype, $subject) {
@@ -67,6 +67,27 @@ class table_portal_topic extends discuz_table
 			$or = 'OR';
 		}
 		return Dxyz_DB::fetch_all("SELECT $idtype FROM %t WHERE $wheresql", $parameter);
+	}
+
+	public function repair_htmlmade($ids) {
+		if(($ids = dintval($ids, true))) {
+			return Dxyz_DB::update($this->_table, array('htmlmade' => 0), Dxyz_DB::field($this->_pk, $ids));
+		}
+		return false;
+	}
+
+	public function fetch_all_topicid_by_dateline($dateline) {
+		$data = array();
+		$where = array();
+
+		if($dateline) {
+			$where[] = Dxyz_DB::field('dateline', intval($dateline), '>=');
+		}
+		$where[] = "closed='0'";
+		if($where) {
+			$data = Dxyz_DB::fetch_all('SELECT topicid FROM '.Dxyz_DB::table($this->_table).' WHERE '. implode(' AND ', $where).' LIMIT 20000', NULL, $this->_pk);
+		}
+		return $data;
 	}
 }
 

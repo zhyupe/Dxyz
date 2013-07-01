@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_member_grouppm.php 27954 2012-02-17 07:33:51Z zhangguosheng $
+ *      $Id: table_common_member_grouppm.php 31733 2012-09-26 02:07:47Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -42,11 +42,11 @@ class table_common_member_grouppm extends discuz_table
 	}
 
 	public function update($uid, $gpmid, $data) {
-		return ($uid = dintval($uid)) && ($gpmid = dintval($gpmid)) && $data && is_array($data) ? Dxyz_DB::update($this->_table, $data, Dxyz_DB::field('gpmid', $gpmid).' AND '.Dxyz_DB::field('uid', $uid)) : false;
+		return ($uid = dintval($uid)) && ($gpmid = dintval($gpmid, true)) && $data && is_array($data) ? Dxyz_DB::update($this->_table, $data, Dxyz_DB::field('gpmid', $gpmid).' AND '.Dxyz_DB::field('uid', $uid)) : false;
 	}
 
 	public function update_to_read_by_unread($uid, $gpmid) {
-		return ($uid = dintval($uid)) && ($gpmid = dintval($gpmid)) ? Dxyz_DB::update($this->_table, array('status' => 1), Dxyz_DB::field('gpmid', $gpmid).' AND '.Dxyz_DB::field('uid', $uid).' AND status=0') : false;
+		return ($uid = dintval($uid)) && ($gpmid = dintval($gpmid, true)) ? Dxyz_DB::update($this->_table, array('status' => 1), Dxyz_DB::field('gpmid', $gpmid).' AND '.Dxyz_DB::field('uid', $uid).' AND status=0') : false;
 	}
 }
 

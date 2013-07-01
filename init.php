@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Dxyz V0.1 Beta
+ * Dxyz V0.2 Beta
  */
 
 define('DXYZ_ROOT', dirname(__FILE__));

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_member_profile.php 27820 2012-02-15 05:15:59Z zhangguosheng $
+ *      $Id: table_common_member_profile.php 31536 2012-09-06 06:32:03Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -29,10 +29,10 @@ class table_common_member_profile extends discuz_table_archive
 		parent::__construct();
 	}
 
-	public function fetch_all($uids, $force_from_db = false, $fetch_archive = 1) {
+	public function fetch_all($uids, $force_from_Dxyz_DB = false, $fetch_archive = 1) {
 		$data = array();
 		if(!empty($uids)) {
-			if($force_from_db || ($data = $this->fetch_cache($uids)) === false || count($uids) != count($data)) {
+			if($force_from_Dxyz_DB || ($data = $this->fetch_cache($uids)) === false || count($uids) != count($data)) {
 				if(is_array($data) && !empty($data)) {
 					$uids = array_diff($uids, array_keys($data));
 				}
@@ -46,7 +46,7 @@ class table_common_member_profile extends discuz_table_archive
 				}
 			}
 			if(isset($this->membersplit) && $fetch_archive && count($data) != count($uids)) {
-				$data = $data + C::t($this->_table.'_archive')->fetch_all(array_diff($uids, array_keys($data)));
+				$data = $data + C::t($this->_table.'_archive')->fetch_all(array_diff($uids, array_keys($data)), null, 0);
 			}
 
 		}

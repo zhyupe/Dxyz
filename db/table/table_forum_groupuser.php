@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_groupuser.php 29459 2012-04-13 01:45:21Z chenmengshu $
+ *      $Id: table_forum_groupuser.php 31121 2012-07-18 06:01:56Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -136,7 +136,7 @@ class table_forum_groupuser extends discuz_table
 		$limitsql = $num ? Dxyz_DB::limit($start, $num) : '';
 
 		$groupuserlist = array();
-		$query = Dxyz_DB::query("SELECT $fieldadd FROM ".Dxyz_DB::table('forum_groupuser')." WHERE fid=%d $levelwhere $sqladd $orderby $limitsql", array($fid));
+		$query = Dxyz_DB::query("SELECT $fieldadd FROM ".Dxyz_DB::table('forum_groupuser')." WHERE fid=%d $levelwhere %i $orderby $limitsql", array($fid,$sqladd));
 		while($groupuser = Dxyz_DB::fetch($query)) {
 			$groupuserlist[$groupuser['uid']] = $groupuser;
 			$groupuserlist[$groupuser['uid']]['online'] = !empty($onlinemember) && is_array($onlinemember) && !empty($onlinemember[$groupuser['uid']]) ? 1 : 0;

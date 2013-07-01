@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_common_member.php 30071 2012-05-09 02:22:31Z zhengqingpeng $
+ *      $Id: table_common_member.php 31849 2012-10-17 04:39:16Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -64,16 +64,19 @@ class table_common_member extends discuz_table_archive
 		if($username) {
 			$user = Dxyz_DB::fetch_first('SELECT * FROM %t WHERE username=%s', array($this->_table, $username));
 			if(isset($this->membersplit) && $fetch_archive && empty($user)) {
-				$user = C::t($this->_table.'_archive')->fetch_by_username($username);
+				$user = C::t($this->_table.'_archive')->fetch_by_username($username, 0);
 			}
 		}
 		return $user;
 	}
 
-	public function fetch_all_by_username($usernames) {
+	public function fetch_all_by_username($usernames, $fetch_archive = 1) {
 		$users = array();
 		if(!empty($usernames)) {
 			$users = Dxyz_DB::fetch_all('SELECT * FROM %t WHERE username IN (%n)', array($this->_table, (array)$usernames), 'username');
+			if(isset($this->membersplit) && $fetch_archive && count($usernames) !== count($users)) {
+				$users += C::t($this->_table.'_archive')->fetch_all_by_username($usernames, 0);
+			}
 		}
 		return $users;
 	}
@@ -83,27 +86,30 @@ class table_common_member extends discuz_table_archive
 		if($username) {
 			$uid = Dxyz_DB::result_first('SELECT uid FROM %t WHERE username=%s', array($this->_table, $username));
 			if(isset($this->membersplit) && $fetch_archive && empty($uid)) {
-				$uid = C::t($this->_table.'_archive')->fetch_uid_by_username($username);
+				$uid = C::t($this->_table.'_archive')->fetch_uid_by_username($username, 0);
 			}
 		}
 		return $uid;
 	}
 
-	public function fetch_all_uid_by_username($usernames) {
+	public function fetch_all_uid_by_username($usernames, $fetch_archive = 1) {
 		$uids = array();
 		if($usernames) {
-			foreach($this->fetch_all_by_username($usernames) as $username => $value) {
+			foreach($this->fetch_all_by_username($usernames, $fetch_archive) as $username => $value) {
 				$uids[$username] = $value['uid'];
 			}
 		}
 		return $uids;
 	}
 
-	public function fetch_all_by_adminid($adminids) {
+	public function fetch_all_by_adminid($adminids, $fetch_archive = 1) {
 		$users = array();
 		$adminids = dintval((array)$adminids, true);
 		if($adminids) {
 			$users = Dxyz_DB::fetch_all('SELECT * FROM %t WHERE adminid IN (%n) ORDER BY adminid, uid', array($this->_table, (array)$adminids), $this->_pk);
+			if(isset($this->membersplit) && $fetch_archive) {
+				$users += C::t($this->_table.'_archive')->fetch_all_by_adminid($adminids, 0);
+			}
 		}
 		return $users;
 	}
@@ -119,12 +125,12 @@ class table_common_member extends discuz_table_archive
 	}
 
 	public function count_by_groupid($groupid) {
-		return $groupid ? Dxyz_DB::result_first('SELECT COUNT(*) FROM %t WHERE groupid=%d', array($this->_table, $groupid)) : 0;
+		return $groupid ? Dxyz_DB::result_first('SELECT COUNT(*) FROM %t WHERE '.Dxyz_DB::field('groupid', $groupid), array($this->_table)) : 0;
 	}
 
 	public function fetch_all_by_groupid($groupid, $start = 0, $limit = 0) {
 		$users = array();
-		if(!($groupid = dintval($groupid, true))) {
+		if(($groupid = dintval($groupid, true))) {
 			$users = Dxyz_DB::fetch_all('SELECT * FROM '.Dxyz_DB::table($this->_table).' WHERE '.Dxyz_DB::field('groupid', $groupid).' '.Dxyz_DB::limit($start, $limit), null, 'uid');
 		}
 		return $users;
@@ -163,7 +169,7 @@ class table_common_member extends discuz_table_archive
 	public function count($fetch_archive = 1) {
 		$count = Dxyz_DB::result_first('SELECT COUNT(*) FROM %t', array($this->_table));
 		if(isset($this->membersplit) && $fetch_archive) {
-			$count += C::t($this->_table.'_archive')->count();
+			$count += C::t($this->_table.'_archive')->count(0);
 		}
 		$count += intval(Dxyz_DB::result_first('SELECT COUNT(*) FROM '.Dxyz_DB::table('common_connect_guest'), null, true));
 		return $count;
@@ -174,14 +180,21 @@ class table_common_member extends discuz_table_archive
 		if($email) {
 			$user = Dxyz_DB::fetch_first('SELECT * FROM %t WHERE email=%s', array($this->_table, $email));
 			if(isset($this->membersplit) && $fetch_archive && empty($user)) {
-				$user = C::t($this->_table.'_archive')->fetch_by_email($email);
+				$user = C::t($this->_table.'_archive')->fetch_by_email($email, 0);
 			}
 		}
 		return $user;
 	}
 
-	public function fetch_all_by_email($emails) {
-		return !empty($emails) ? Dxyz_DB::fetch_all('SELECT * FROM %t WHERE %i', array($this->_table, Dxyz_DB::field('email', $emails)), 'email') : array();
+	public function fetch_all_by_email($emails, $fetch_archive = 1) {
+		$users = array();
+		if(!empty($emails)) {
+			$users = Dxyz_DB::fetch_all('SELECT * FROM %t WHERE %i', array($this->_table, Dxyz_DB::field('email', $emails)), 'email');
+			if(isset($this->membersplit) && $fetch_archive && count($emails) !== count($users)) {
+				$users += C::t($this->_table.'_archive')->fetch_all_by_email($emails, 0);
+			}
+		}
+		return $users;
 	}
 
 	public function count_by_email($email, $fetch_archive = 0) {
@@ -189,7 +202,7 @@ class table_common_member extends discuz_table_archive
 		if($email) {
 			$count = Dxyz_DB::result_first('SELECT COUNT(*) FROM %t WHERE email=%s', array($this->_table, $email));
 			if(isset($this->membersplit) && $fetch_archive) {
-				$count += C::t($this->_table.'_archive')->count_by_email($email);
+				$count += C::t($this->_table.'_archive')->count_by_email($email, 0);
 			}
 		}
 		return $count;
@@ -498,6 +511,10 @@ class table_common_member extends discuz_table_archive
 
 	public function range_by_uid($from, $limit) {
 		return Dxyz_DB::fetch_all('SELECT * FROM %t WHERE uid >= %d ORDER BY uid LIMIT %d', array($this->_table, $from, $limit), $this->_pk);
+	}
+
+	public function update_groupid_by_groupid($source, $target) {
+		return Dxyz_DB::query('UPDATE %t SET groupid=%d WHERE adminid <= 0 AND groupid=%d', array($this->_table, $target, $source));
 	}
 }
 

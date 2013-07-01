@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_home_friend.php 27777 2012-02-14 07:07:26Z zhengqingpeng $
+ *      $Id: table_home_friend.php 31044 2012-07-12 01:50:32Z chenmengshu $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -59,7 +59,7 @@ class table_home_friend extends discuz_table
 		$parameter[] = $uid;
 		$wherearr[] = is_array($uid) ? 'uid IN(%n)' : 'uid=%d';
 
-		if($gid && $gid > -1) {
+		if(is_numeric($gid) && $gid > -1) {
 			$parameter[] = $gid;
 			$wherearr[] = 'gid=%d';
 		}

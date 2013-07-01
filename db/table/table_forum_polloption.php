@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_polloption.php 27449 2012-02-01 05:32:35Z zhangguosheng $
+ *      $Id: table_forum_polloption.php 31445 2012-08-28 08:56:51Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -36,7 +36,7 @@ class table_forum_polloption extends discuz_table
 	public function delete_safe_tid($tid, $polloptionid = 0) {
 		$sqladd = '';
 		if($polloptionid) {
-			$sqladd = Dxyz_DB::field('polloptionid', $polloptionid).' AND ';
+			$sqladd = Dxyz_DB::field('polloptionid', intval($polloptionid)).' AND ';
 		}
 		Dxyz_DB::query("DELETE FROM %t WHERE $sqladd tid=%d", array($this->_table, $tid));
 	}
@@ -46,10 +46,14 @@ class table_forum_polloption extends discuz_table
 	}
 
 	public function update_safe_tid($polloptionid, $tid, $displayorder, $polloption = '') {
+		$param = array($this->_table, $displayorder);
 		if($polloption) {
-			$sqladd = ', '.Dxyz_DB::field('polloption', $polloption);
+			$sqladd = ', polloption=%s';
+			$param[] = $polloption;
 		}
-		Dxyz_DB::query('UPDATE %t SET displayorder=%d'.$sqladd.' WHERE polloptionid=%d AND tid=%d', array($this->_table, $displayorder, $polloptionid, $tid));
+		$param[] = $polloptionid;
+		$param[] = $tid;
+		Dxyz_DB::query('UPDATE %t SET displayorder=%d'.$sqladd.' WHERE polloptionid=%d AND tid=%d', $param);
 	}
 	public function fetch_count_by_tid($tid) {
 		return Dxyz_DB::fetch_first('SELECT MAX(votes) AS max, SUM(votes) AS total FROM %t WHERE tid=%d', array($this->_table, $tid));
