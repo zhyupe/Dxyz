@@ -31,6 +31,24 @@ switch ($dzVersion[0]) {
             }
             return $ret;
         }
+
+        function currentlang() {
+            $charset = strtoupper(CHARSET);
+            if ($charset == 'GBK') {
+                return 'SC_GBK';
+            } elseif ($charset == 'BIG5') {
+                return 'TC_BIG5';
+            } elseif ($charset == 'UTF-8') {
+                global $_G;
+                if ($_G['config']['output']['language'] == 'zh_cn') {
+                    return 'SC_UTF8';
+                } elseif ($_G['config']['output']['language'] == 'zh_tw') {
+                    return 'TC_UTF8';
+                }
+            } else {
+                return '';
+            }
+        }
         
         function dxyz_input() {
             $_GET = dstripslashes($_GET);
