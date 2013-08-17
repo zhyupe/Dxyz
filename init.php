@@ -13,6 +13,7 @@ $dzVersion = explode(' ', DISCUZ_VERSION);
 require_once DXYZ_ROOT . '/init_core.php';
 require_once DXYZ_ROOT . '/init_db.php';
 require_once DXYZ_ROOT . '/init_function.php';
+require_once DXYZ_ROOT . '/init_post.php';
 
 if (defined('IN_ADMINCP') && $_G['gp_action'] == 'plugins' && isset($installlang)) {
     require_once DXYZ_ROOT . '/init_installlang.php';
