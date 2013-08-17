@@ -62,5 +62,3 @@ switch ($dzVersion[0]) {
         function dxyz_input() { }
         break;
 }
-
-?>

@@ -70,4 +70,3 @@ switch ($dzVersion[0]) {
     default:
         break;
 }
-?>

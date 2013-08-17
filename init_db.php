@@ -27,4 +27,3 @@ switch ($dzVersion[0]) {
 }
 
 class Dxyz_DB extends discuz_database {}
-?>

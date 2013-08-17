@@ -17,4 +17,3 @@ require_once DXYZ_ROOT . '/init_function.php';
 if (defined('IN_ADMINCP') && $_G['gp_action'] == 'plugins' && isset($installlang)) {
     require_once DXYZ_ROOT . '/init_installlang.php';
 }
-?>
